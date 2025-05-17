@@ -18,6 +18,9 @@ COPY --from=composer:latest /usr/bin/composer /usr/bin/composer
 WORKDIR /app
 COPY . /app
 
+# .env を app にコピー（この段階なら /app は存在している）
+RUN cp .env.example .env
+
 RUN composer install \
     && php artisan config:clear \
     && php artisan key:generate

@@ -15,8 +15,8 @@ class PostSeeder extends Seeder
 
         // ランダムに使う画像（public/images に保存されている前提）
         $images = [
-            'images/Zinnbei1.png',
-            'images/Zinnbei_button.png',
+            // 'images/Zinnbei1.png',
+            // 'images/Zinnbei_button.png',
         ];
 
         $posts = [
@@ -109,7 +109,7 @@ class PostSeeder extends Seeder
                 'title' => $post['title'],
                 'description' => $post['description'],
                 'category_id' => $post['category_id'],
-                'image' => $faker->boolean(50) ? $faker->randomElement($images) : null,
+                // 'image' => $faker->boolean(50) ? $faker->randomElement($images) : null,
                 'location' => $post['location'] ?? null,
                 'departure' => $post['departure'] ?? null,
                 'destination' => $post['destination'] ?? null,
