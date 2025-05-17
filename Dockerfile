@@ -5,6 +5,7 @@ RUN apt-get update && apt-get install -y \
     libzip-dev \
     zip \
     sqlite3 \
+    libsqlite3-dev \
     git \
     curl \
     libpng-dev \
