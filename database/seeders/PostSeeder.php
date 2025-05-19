@@ -36,13 +36,13 @@ class PostSeeder extends Seeder
                 'category_id' => 2,
                 'location' => 'SM Cebu',
             ],
-            // Item
-            [
-                'title' => 'Selling Electric Fan',
-                'description' => 'Almost new, 3-speed fan.',
-                'category_id' => 3,
-                'max' => 3,
-            ],
+            // // Item
+            // [
+            //     'title' => 'Selling Electric Fan',
+            //     'description' => 'Almost new, 3-speed fan.',
+            //     'category_id' => 3,
+            //     'max' => 3,
+            // ],
 
             [
                 'title' => 'Selling Electric Fan',

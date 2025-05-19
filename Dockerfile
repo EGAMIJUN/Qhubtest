@@ -1,27 +1,33 @@
 FROM php:8.2-cli
 
+# Node.js を追加するためのパッケージ設定
 RUN apt-get update && apt-get install -y \
+    curl \
     unzip \
-    libzip-dev \
     zip \
     sqlite3 \
     libsqlite3-dev \
+    libzip-dev \
     git \
-    curl \
     libpng-dev \
     libonig-dev \
     libxml2-dev \
-    && docker-php-ext-install pdo pdo_sqlite
+    gnupg \
+    ca-certificates \
+    && curl -fsSL https://deb.nodesource.com/setup_18.x | bash - \
+    && apt-get install -y nodejs
 
+# Composer のインストール
 COPY --from=composer:latest /usr/bin/composer /usr/bin/composer
 
+# アプリケーションのセットアップ
 WORKDIR /app
 COPY . /app
-
-# .env を app にコピー（この段階なら /app は存在している）
-RUN cp .env.example .env
+COPY .env /app/.env 
 
 RUN composer install \
+    && npm install \
+    && npm run build \
     && php artisan config:clear \
     && php artisan key:generate
 
