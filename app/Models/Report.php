@@ -14,7 +14,7 @@ class Report extends Model
     }
 
     public function user(){
-        return $this->belongsTo(User::class);
+        return $this->belongsTo(User::class)->withTrashed();
     }
 
     public function post(){
@@ -22,6 +22,6 @@ class Report extends Model
     }
 
     public function reportable(){
-        return $this->morphTo();
+        return $this->morphTo()->withTrashed();
     }
 }
