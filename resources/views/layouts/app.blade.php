@@ -16,10 +16,9 @@
         crossorigin="anonymous" referrerpolicy="no-referrer" />
 
     <!-- Bootstrap CSS -->
-    <link href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.10.5/font/bootstrap-icons.css" rel="stylesheet">
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/css/bootstrap.min.css" rel="stylesheet" />
 
-
-    <!-- poppins -->
+    <!-- Poppins -->
     <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@100;200;300;400;500;600;700;800;900&display=swap"
         rel="stylesheet">
 
@@ -29,23 +28,24 @@
     <!-- Scripts -->
     @vite(['resources/sass/app.scss', 'resources/js/app.js'])
 
-    {{-- For Edit --}}
-    <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
+    <!-- Alpine.js -->
+    <script defer src="//unpkg.com/alpinejs"></script>
 
-    {{-- alpine.js --}}
-    <script defer src="//unpkg.com/alpinejs" defer></script>
+    <!-- Google Maps JavaScript API -->
+    <script src="https://maps.googleapis.com/maps/api/js?key={{ config('services.google.api_key') }}&libraries=places"
+        loading="async"></script>
 </head>
 
 <body>
     <div id="app">
-        {{-- Navbarをlogin・registerページでは非表示にする --}}
         @if (!in_array(Route::currentRouteName(), ['login', 'register', 'chatRoom.show']))
-            <nav class="navbar navbar-expand-md navbar-light bg-white shadow-sm">
+            <nav x-data="{ searching: false }" class="navbar navbar-expand-md navbar-light bg-white shadow-sm">
                 <div class="container-fluid d-flex justify-content-between align-items-center flex-nowrap">
-                    <a class="navbar-brand ms-3" href="{{ url('/') }}">
+                    <a class="navbar-brand ms-3" href="{{ url('/') }}" x-show="!searching" x-transition>
                         <img src="{{ asset('images/Zinnbei1.png') }}" alt="icon"
                             style="width: auto; height: 100px;">
                     </a>
+
                     <!-- Right Side Of Navbar -->
                     <ul class="navbar-nav ms-auto mt-3 d-flex flex-row">
                         @guest
@@ -54,17 +54,44 @@
                                     <a class="nav-link" href="{{ route('login') }}">{{ __('Login') }}</a>
                                 </li>
                             @endif
-
                             @if (Route::has('register'))
                                 <li class="nav-item">
                                     <a class="nav-link" href="{{ route('register') }}">{{ __('Register') }}</a>
                                 </li>
                             @endif
                         @else
-                            <!-- Search -->
                             <li class="nav-item">
-                                <form class="search-box mb-3 d-flex bg-white rounded-pill px-3 py-2">
-                                    <input type="text" placeholder="Search ..." class="form-control border-2 me-2">
+                                @php
+                                    $path = request()->path();
+                                    $searchAction = route('search');
+                                    $placeholder = 'Search all content...';
+
+                                    if (request()->is('event*')) {
+                                        $searchAction = route('event.search');
+                                        $placeholder = 'Search Events...';
+                                    } elseif (request()->is('food*')) {
+                                        $searchAction = route('food.search');
+                                        $placeholder = 'Search Foods...';
+                                    } elseif (request()->is('item*')) {
+                                        $searchAction = route('item.search');
+                                        $placeholder = 'Search Items...';
+                                    } elseif (request()->is('travel*')) {
+                                        $searchAction = route('travel.search');
+                                        $placeholder = 'Search Travels...';
+                                    } elseif (request()->is('transportation*')) {
+                                        $searchAction = route('transportation.search');
+                                        $placeholder = 'Search Transportation...';
+                                    } elseif (request()->is('question*')) {
+                                        $searchAction = route('question.search');
+                                        $placeholder = 'Search Questions...';
+                                    }
+                                @endphp
+
+                                <form action="{{ $searchAction }}" method="GET"
+                                    class="search-box mb-3 d-flex bg-white rounded-pill px-3 py-2">
+                                    <input type="text" name="search" placeholder="{{ $placeholder }}"
+                                        class="form-control border-2 me-2"
+                                        @focus="if (window.innerWidth < 768) searching = true" @blur="searching = false">
                                     <button class="btn btn-info text-white rounded-circle">
                                         <i class="fas fa-search"></i>
                                     </button>
@@ -89,7 +116,6 @@
                                         <i class="fa-solid fa-circle-user text-info icon-sm"></i>
                                     @endif
 
-                                    {{-- 通知バッジ --}}
                                     @if ($latestWarning)
                                         <span
                                             class="position-absolute top-0 start-75 translate-middle badge rounded-pill bg-danger"
@@ -99,7 +125,6 @@
                                         </span>
                                     @endif
                                 </button>
-
 
                                 <div class="dropdown-menu dropdown-menu-end" aria-labelledby="account-dropdown">
                                     @can('admin')
@@ -130,13 +155,29 @@
         @endif
 
         <main class="py-0">
-            {{-- 管理者ページの場合のみ admin.sidebar を表示 --}}
             @if (request()->is('admin/*'))
                 @include('admin.sidebar')
             @endif
 
-            {{-- 全ユーザー共通の通常ページレイアウト --}}
             <div class="container py-4">
+                @if (session('success'))
+                    <div id="successMessage"
+                        class="alert alert-danger alert-dismissible fade show fixed-top mx-auto mt-3"
+                        style="max-width: 600px; z-index: 1050;" role="alert">
+                        {{ session('success') }}
+                    </div>
+
+                    <script>
+                        setTimeout(() => {
+                            const msg = document.getElementById('successMessage');
+                            if (msg) {
+                                msg.style.opacity = '0';
+                                setTimeout(() => msg.remove(), 1000); // 完全に削除
+                            }
+                        }, 2000); // 3秒後にフェードアウト開始
+                    </script>
+                @endif
+
                 @yield('content')
             </div>
         </main>
@@ -153,7 +194,6 @@
     @include('posts.components.forms.post-form-travel-modal')
     @include('posts.components.modals.getreport')
 
-    </div>
     @stack('scripts')
 </body>
 

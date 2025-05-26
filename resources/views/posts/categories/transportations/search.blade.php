@@ -1,13 +1,14 @@
 @extends('layouts.app')
 
-@section('title', 'Transpotation')
+@section('title', 'Transportation Search')
 
 @section('content')
 
-    {{-- 投稿表示 + PCメニュー --}}
+    {{-- 検索結果表示 + PCメニュー --}}
     <div class="container-fluid">
         <div class="row justify-content-center align-items-start mt-3">
             <div class="col-12 col-md-9">
+
                 <!-- ステータスフィルター -->
                 <div class="mb-3">
                     <form method="GET" action="{{ route('transportation.index') }}">
@@ -26,14 +27,16 @@
                     </form>
                 </div>
 
-                @forelse($all_posts as $post)
-                    @if (request('trans_category_id') == null || $post->trans_category_id == request('trans_category_id'))
-                        @include('posts.components.post-card', ['post' => $post])
-                    @endif
+                <h5 class="mb-4 text-muted">Search results for "<strong>{{ $search }}</strong>"</h5>
+
+                @forelse($posts as $post)
+                    @include('posts.components.post-card', ['post' => $post])
                 @empty
-                    <p>No posts available.</p>
+                    <p>No matching transportation posts found.</p>
                 @endforelse
+
             </div>
+
             <div class="col-md-3 d-none d-md-block ps-md-4 sidebar-sticky">
                 @include('posts.components.sidebar-menu')
             </div>
@@ -42,6 +45,7 @@
 
     {{-- pagination --}}
     <div class="d-flex justify-content-center w-100 post-pagination my-pagination">
-        {{ $all_posts->onEachSide(1)->links('pagination::bootstrap-5') }}
+        {{ $posts->onEachSide(1)->links('pagination::bootstrap-5') }}
     </div>
+
 @endsection

@@ -8,6 +8,7 @@ use App\Models\ReportReason;
 use App\Models\User;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Pagination\LengthAwarePaginator;
+use Carbon\Carbon;
 
 class ItemController extends Controller
 {
@@ -32,12 +33,18 @@ class ItemController extends Controller
             ->pluck('keyword')
             ->toArray();
 
-        // ページネーションされたデータ取得
-        $paginator = $this->post->where('category_id', 3)
-            ->latest()
-            ->paginate(5);
+        $now = Carbon::now();
 
-        // コレクション取得
+        // クエリに時間条件を追加
+        $paginator = $this->post->where('category_id', 3)
+            ->where(function ($query) use ($now) {
+                // startdatetimeが今以降 または enddatetimeが今以降
+                $query->where('startdatetime', '>=', $now)
+                    ->orWhere('enddatetime', '>=', $now);
+            })
+            ->latest()
+            ->paginate(10);
+
         $posts = $paginator->getCollection()
             ->map(function ($post) use ($wanted_keywords) {
                 $post->is_recommended  = false;
@@ -55,7 +62,6 @@ class ItemController extends Controller
             ->sortByDesc('is_recommended')
             ->values();
 
-        // ソート済みコレクションを再セットしてページネーターを作成
         $all_posts = new LengthAwarePaginator(
             $posts,
             $paginator->total(),
@@ -71,15 +77,20 @@ class ItemController extends Controller
     public function search(Request $request)
     {
         $all_report_reasons = $this->reportReason->all();
+        $now = Carbon::now();
 
         $posts = $this->post
             ->where('category_id', 3)
             ->where(function ($query) use ($request) {
-                $query->where('title', 'like', '%' . $request->search . '%')
-                    ->orWhere('description', 'like', '%' . $request->search . '%');
+                $query->where('description', 'like', '%' . $request->search . '%');
+            })
+            ->where(function ($query) use ($now) {
+                $query->where('startdatetime', '>=', $now)
+                    ->orWhere('enddatetime', '>=', $now);
             })
             ->where('user_id', '!=', Auth::id())
-            ->latest()->Paginate(5);
+            ->latest()
+            ->paginate(10);
 
         return view('posts.categories.items.search')
             ->with('all_report_reasons', $all_report_reasons)

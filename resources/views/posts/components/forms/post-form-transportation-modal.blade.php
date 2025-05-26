@@ -21,7 +21,10 @@ aria-hidden="true">
 
                 <!-- File input -->
                 <div class="mb-3">
-                    <input class="form-control" type="file" name="images[]" id="imageInput5" accept="image/*" value="{{ old('image') }}" multiple>
+                    <input class="form-control" type="file" name="images[]" id="imageInput5" accept="image/*" multiple>
+                    <div class="form-text text-start">
+                        Acceptable formats: jpeg, jpg, png, gif only<br>Max file size is 2048kB<br>Up to 3 images
+                    </div>
                     @error('images')
                         <p class="text-danger small">{{ $message }}</p>
                     @enderror
@@ -38,20 +41,40 @@ aria-hidden="true">
                 {{-- Transportation input --}}
                 <div class="mb-3">
                     @if (!empty($all_trans_categories))
-                        <select name="trans_category" id="trans_category">
-                            <option value="" {{ old('trans_category') ? '' : 'selected' }}>Select transportation</option>
-                            @foreach ($all_trans_categories as $trans_category)
-                                <option value="{{ $trans_category->id }}"
-                                    {{ old('trans_category') == $trans_category->id ? 'selected' : '' }}>
-                                    {{ $trans_category->name }}
-                                </option>
-                            @endforeach
-                        </select>
+                        <label class="form-label d-block text-start">Select transportation（select one）</label>
+                        @foreach ($all_trans_categories as $trans_category)
+                            <div class="form-check form-check-inline">
+                                <input
+                                    class="form-check-input"
+                                    type="radio"
+                                    name="trans_category"
+                                    id="trans_category_{{ $trans_category->id }}"
+                                    value="{{ $trans_category->id }}"
+                                    {{ old('trans_category') == $trans_category->id ? 'checked' : '' }}
+                                >
+                                <label class="form-check-label" for="trans_category_{{ $trans_category->id }}">
+
+                                    @switch($trans_category->id)
+                                        @case(1)
+                                            <i class="fas fa-motorcycle"></i> {{ $trans_category->name }}
+                                            @break
+                                        @case(2)
+                                            <i class="fas fa-car"></i> {{ $trans_category->name }}
+                                            @break
+                                        @case(3)
+                                            <i class="fas fa-bus"></i> {{ $trans_category->name }}
+                                            @break
+                                    @endswitch
+                                </label>
+                            </div>
+                        @endforeach
                     @endif
+
                     @error('trans_category')
                         <p class="text-danger small">{{ $message }}</p>
                     @enderror
                 </div>
+
 
                 {{-- Deporture input --}}
                 <div class="mb-3">
@@ -71,7 +94,7 @@ aria-hidden="true">
 
                 <!-- Description input -->
                 <div class="mb-3">
-                    <textarea class="form-control" name="description" id="description" placeholder="Enter your post description..." rows="3">{{ old('description') }}</textarea>
+                    <textarea class="form-control" name="description" id="description" placeholder="Enter your transportation description..." rows="3">{{ old('description') }}</textarea>
                     @error('description')
                         <p class="text-danger small">{{ $message }}</p>
                     @enderror

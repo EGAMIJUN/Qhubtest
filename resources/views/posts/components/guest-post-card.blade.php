@@ -15,7 +15,7 @@
             </small>
         </div>
 
-        <div class="ms-auto">
+        {{-- <div class="ms-auto">
             <i class="fas fa-ellipsis-h text-muted" style="cursor:pointer;" data-bs-toggle="dropdown"></i>
 
             <ul class="dropdown-menu dropdown-menu-end">
@@ -41,7 +41,7 @@
                     </li>
                 @endif
             </ul>
-        </div>
+        </div> --}}
     </div>
 
     {{-- 説明文（上部） --}}
@@ -117,30 +117,30 @@
         <div class="d-flex align-items-center mb-3">
             {{-- いいね --}}
             <div class="me-3">
-                @php
+                {{-- @php
                     $isLiked = $post->isLiked();
-                @endphp
+                @endphp --}}
 
-                <div x-data="likeComponent({{ $post->id }}, {{ $post->likes->count() }}, {{ $isLiked ? 'true' : 'false' }})" class="d-flex align-items-center gap-2">
-                    <button type="button" class="btn d-flex align-items-center text-muted" @click="toggleLike">
-                        <i :class="liked ? 'fas fa-heart text-danger me-1' : 'far fa-heart me-1'"></i>
-                        <span x-text="likesCount" class="text-muted"></span>
-                    </button>
-                </div>
+                {{-- <div x-data="likeComponent({{ $post->id }}, {{ $post->likes->count() }}, {{ $isLiked ? 'true' : 'false' }})" class="d-flex align-items-center gap-2">
+                    <button type="button" class="btn d-flex align-items-center text-muted" @click="toggleLike"> --}}
+                        <i class="fas fa-heart text-danger me-1"></i>
+                        <span x-text="likesCount" class="text-muted">0</span>
+                    {{-- </button>
+                </div> --}}
             </div>
 
             {{-- コメント or アンサー --}}
             <div class="me-3">
                 @if ($post->category_id == 6)
-                    <button class="btn p-0 text-muted d-flex align-items-center"
-                        onclick="toggleAnswer({{ $post->id }})">
-                        <i class="fa-solid fa-reply me-1"></i>{{ $post->answers->count() }}
-                    </button>
+                    {{-- <button class="btn p-0 text-muted d-flex align-items-center"
+                        onclick="toggleAnswer({{ $post->id }})"> --}}
+                        <i class="fa-solid fa-reply me-1"></i>0
+                    {{-- </button> --}}
                 @else
-                    <button class="btn p-0 text-muted d-flex align-items-center" data-bs-toggle="modal"
-                        data-bs-target="#commentsModal-{{ $post->id }}">
-                        <i class="fa-regular fa-comment me-1"></i>{{ $post->comments->count() }}
-                    </button>
+                    {{-- <button class="btn p-0 text-muted d-flex align-items-center" data-bs-toggle="modal"
+                        data-bs-target="#commentsModal-{{ $post->id }}"> --}}
+                        <i class="fa-regular fa-comment me-1"></i>0
+                    {{-- </button> --}}
                 @endif
             </div>
         </div>
@@ -175,9 +175,9 @@
 
                                     {{-- 現在の参加者数 --}}
                                     <div class="d-flex align-items-center">
-                                        <span class="fw-bold fs-5 text-dark">{{ $post->participations->count() }}</span>
+                                        <span class="fw-bold fs-5 text-dark">0</span>
                                         <span class="mx-2 text-muted">/</span>
-                                        <span class="text-muted small">Max: {{ $post->max ?? 'TBD' }}</span>
+                                        <span class="text-muted small">Max: 20</span>
                                     </div>
                                 </div>
                             </div>
@@ -197,15 +197,15 @@
                         {{-- 参加者数と参加ボタン --}}
                         <div class="d-flex align-items-center gap-3 my-2">
                             {{-- 参加ボタン --}}
-                            @if ($post->participations->count() >= $post->max)
+                            {{-- @if ($post->participations->count() >= $post->max)
                                 @if ($post->isParticipanted())
                                     <form action="{{ route('participation.delete', $post->id) }}" method="post"
                                         class="d-flex align-items-center">
                                         @csrf
                                         @method('DELETE')
-                                        <button class="btn btn-sm shadow-none p-0">
-                                            <i class="fa-solid fa-hand text-primary fa-lg"></i>
-                                        </button>
+                                        <button class="btn btn-sm shadow-none p-0"> --}}
+                                            <i class="fa-regular fa-hand fa-lg"></i>
+                                        {{-- </button>
                                     </form>
                                 @else
                                     <button class="btn btn-sm shadow-none p-0" disabled>
@@ -231,57 +231,57 @@
                                         </button>
                                     </form>
                                 @endif
-                            @endif
+                            @endif --}}
 
                             {{-- 現在の参加者数 --}}
                             <div class="d-flex align-items-center">
-                                <button class="btn btn-link text-decoration-none p-0 m-0" data-bs-toggle="modal"
-                                    data-bs-target="#participant-user-{{ $post->id }}">
+                                {{-- <button class="btn btn-link text-decoration-none p-0 m-0" data-bs-toggle="modal"
+                                    data-bs-target="#participant-user-{{ $post->id }}"> --}}
                                     <i class="fa-solid fa-users text-muted me-1"></i>
-                                    <span class="fw-bold fs-5 text-dark">{{ $post->participations->count() }}</span>
-                                </button>
+                                    <span class="fw-bold fs-5 text-dark">0</span>
+                                {{-- </button> --}}
                                 <span class="mx-2 text-muted">/</span>
-                                <span class="text-muted small">Max: {{ $post->max ?? 'TBD' }}</span>
+                                <span class="text-muted small">Max: 20</span>
                             </div>
                         </div>
-                        @include('posts.components.modals.participation-modal')
+                        {{-- @include('posts.components.modals.participation-modal') --}}
                     </div>
                 @endif
             @break
 
             @case(2)
                 <div class="mt-2 fw-bold">
-                    <p>
-                        <a href="https://www.google.com/maps?q={{ $post->latitude }},{{ $post->longitude }}"
-                            target="_blank">
+                    <p class="text-primary text-decoration-underline">
+                        {{-- <a href="https://www.google.com/maps?q={{ $post->latitude }},{{ $post->longitude }}"
+                            target="_blank"> --}}
                             <i class="fa-solid fa-location-dot"></i>
                             {{ $post->location ?? 'TBD' }}
-                        </a>
+                        {{-- </a> --}}
                     </p>
                 </div>
             @break
 
             @case(3)
                 {{-- RECOMMENDED バッジ --}}
-                @if ($post->is_recommended)
+                {{-- @if ($post->is_recommended)
                     <div class="mb-2">
                         <span class="badge bg-warning text-dark">
                             <i class="fa-solid fa-star me-1"></i>
                             RECOMMENDED: 「{{ $post->matched_keyword }}」！
                         </span>
                     </div>
-                @endif
+                @endif --}}
 
                 {{-- 参加者数 --}}
-                @if ($post->chatRoom)
+                {{-- @if ($post->chatRoom) --}}
                     <h5 class="mb-2">
-                        Participants ({{ $post->chatRoom->users->where('role_id', '!=', 1)->count() }} / {{ $post->max }})
+                        Participants (0 / 10)
                     </h5>
-                @else
+                {{-- @else
                     <h5 class="mb-2">
                         Participants (0 / {{ $post->max }})
                     </h5>
-                @endif
+                @endif --}}
 
 
                 {{-- チャット開始リンク --}}
@@ -317,12 +317,12 @@
 
             @case(4)
                 <div class="mt-2 fw-bold">
-                    <p>
-                        <a href="https://www.google.com/maps?q={{ $post->latitude }},{{ $post->longitude }}"
-                            target="_blank">
+                    <p class="text-primary text-decoration-underline">
+                        {{-- <a href="https://www.google.com/maps?q={{ $post->latitude }},{{ $post->longitude }}"
+                            target="_blank"> --}}
                             <i class="fa-solid fa-location-dot"></i>
                             {{ $post->location ?? 'TBD' }}
-                        </a>
+                        {{-- </a> --}}
                     </p>
                 </div>
             @break
@@ -370,9 +370,9 @@
         <p class="text-uppercase text-muted small mb-0">{{ $post->created_at->format('M d, Y') }}</p>
 
         {{-- ▼▼ 質問カテゴリー専用：アンサー入力・一覧表示 ▼▼ --}}
-        @if ($post->category_id == 6)
+        {{-- @if ($post->category_id == 6)
             @include('posts.categories.questions.modal', ['post' => $post])
-        @endif
+        @endif --}}
 
 
 
@@ -439,7 +439,7 @@
 </div>
 
 {{-- モーダル --}}
-@include('posts.components.edit-forms.edit-form-modal', ['post' => $post])
+{{-- @include('posts.components.edit-forms.edit-form-modal', ['post' => $post])
 @include('posts.components.modals.report-modal', ['post' => $post])
 @include('posts.components.modals.delete-modal', ['post' => $post])
-@include('posts.components.modals.comment-modal', ['post' => $post])
+@include('posts.components.modals.comment-modal', ['post' => $post]) --}}

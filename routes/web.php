@@ -22,15 +22,18 @@ use App\Http\Controllers\ChatMessageController;
 use App\Http\Controllers\AnswerController;
 use App\Http\Controllers\WantedItemController;
 use App\Http\Controllers\ReportReasonController;
-
+use App\Http\Controllers\GuestPostController;
 
 Auth::routes();
+
+Route::get('/guest', [GuestPostController::class, 'index'])->name('guest.index');
 
 Route::get('/login/{provider}', [SocialLoginController::class, 'redirectToProvider'])->name('social.login');
 Route::get('/login/{provider}/callback', [SocialLoginController::class, 'handleProviderCallback']);
 
 Route::group(['middleware' => 'auth'], function () {
     Route::get('/', [HomeController::class, 'index'])->name('index');
+    Route::get('/search', [HomeController::class, 'search'])->name('search');
 
     // Post route
     Route::group(['prefix' => 'posts', 'as' => 'posts.'], function () {
@@ -40,14 +43,18 @@ Route::group(['middleware' => 'auth'], function () {
         Route::delete('/{id}/delete', [PostController::class, 'delete'])->name('delete');
     });
 
-    Route::get('/loadmore', [PostController::class, 'loadMore'])->name('posts.loadMore');
+    // Like route
+    Route::group(['prefix' => 'like', 'as' => 'like.'], function () {
+        Route::post('/{id}/store', [LikeController::class, 'store'])->name('store');
+        Route::delete('/{id}/delete', [LikeController::class, 'delete'])->name('delete');
+    });
 
     // like route
     Route::post('/posts/{post_id}/like-toggle', [LikeController::class, 'likeToggle'])->name('posts.likeToggle');
 
     // Comment route
     Route::group(['prefix' => 'comment', 'as' => 'comment.'], function () {
-        Route::post('/{id}/store', [CommentController::class, 'store'])->name('store');
+        Route::post('/{post_id}', [CommentController::class, 'store'])->name('store');
         Route::delete('/{id}/destroy', [CommentController::class, 'destroy'])->name('destroy');
         Route::patch('/{post_id}/{id}', [CommentController::class, 'update'])->name('update');
     });
@@ -74,6 +81,7 @@ Route::group(['middleware' => 'auth'], function () {
     Route::group(['prefix' => 'event', 'as' => 'event.'], function () {
         Route::get('/', [EventController::class, 'index'])->name('index');
         Route::get('/{id}/show', [EventController::class, 'show'])->name('show');
+        Route::get('/search', [EventController::class, 'search'])->name('search');
     });
 
     Route::group(['prefix' => 'participation', 'as' => 'participation.'], function () {
@@ -84,6 +92,7 @@ Route::group(['middleware' => 'auth'], function () {
     // Food route
     Route::group(['prefix' => 'food', 'as' => 'food.'], function () {
         Route::get('/', [FoodController::class, 'index'])->name('index');
+        Route::get('/search', [FoodController::class, 'search'])->name('search');
     });
 
     // Item route
@@ -110,16 +119,19 @@ Route::group(['middleware' => 'auth'], function () {
     // Travel route
     Route::group(['prefix' => 'travel', 'as' => 'travel.'], function () {
         Route::get('/', [TravelController::class, 'index'])->name('index');
+        Route::get('/search', [TravelController::class, 'search'])->name('search');
     });
 
     // Transportation route
     Route::group(['prefix' => 'transportation', 'as' => 'transportation.'], function () {
         Route::get('/', [TransportationController::class, 'index'])->name('index');
+        Route::get('/search', [TransportationController::class, 'search'])->name('search');
     });
 
     // Question route
     Route::group(['prefix' => 'question', 'as' => 'question.'], function () {
         Route::get('/', [QuestionController::class, 'index'])->name('index');
+        Route::get('/search', [QuestionController::class, 'search'])->name('search');
     });
 
 

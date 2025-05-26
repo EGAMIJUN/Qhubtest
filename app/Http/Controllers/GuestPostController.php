@@ -11,14 +11,8 @@ use App\Models\ReportReason;
 use App\Models\Report;
 use Illuminate\Support\Facades\Auth;
 
-class HomeController extends Controller
+class GuestPostController extends Controller
 {
-    /**
-     * Create a new controller instance.
-     *
-     * @return void
-     */
-
     private $category;
     private $trans_category;
     private $post;
@@ -34,11 +28,6 @@ class HomeController extends Controller
         $this->reportReason = $reportReason;
     }
 
-    /**
-     * Show the application dashboard.
-     *
-     * @return \Illuminate\Contracts\Support\Renderable
-     */
     public function index()
     {
         $all_categories = $this->category->all();
@@ -47,27 +36,11 @@ class HomeController extends Controller
         $all_user = $this->user->all();
         $all_report_reasons = $this->reportReason->all();
 
-        return view('home')
+        return view('guest-home')
             ->with('all_categories', $all_categories)
             ->with('all_trans_categories', $all_trans_categories)
             ->with('all_posts', $all_posts)
             ->with('all_user', $all_user)
             ->with('all_report_reasons', $all_report_reasons);
-    }
-
-    public function search(Request $request){
-        $all_report_reasons = $this->reportReason->all();
-
-        $posts = $this->post
-            ->where(function ($query) use ($request) {
-                $query->where('description', 'like', '%' . $request->search . '%');
-            })
-            ->where('user_id', '!=', Auth::id())
-            ->latest()->paginate(10); // ← Pは小文字の `paginate`
-
-        return view('home-search')
-            ->with('all_report_reasons', $all_report_reasons)
-            ->with('posts', $posts)
-            ->with('search', $request->search);
     }
 }
