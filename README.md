@@ -6,37 +6,37 @@ Users can post and browse class updates, announcements, questions, and more.
 ---
 
 ## 🔧 Technologies Used
-
-- Laravel 10  
-- MySQL  
-- PHP 8.2  
-- Tailwind CSS  
+- Laravel (10.x)
+- PHP 8.2
+- MySQL / SQLite
+- Tailwind CSS
+- Vite
 - Git / GitHub
+
 
 ---
 
 ## ✨ Key Features
+- 📝 Create, edit, and delete posts
+- 🧑‍🤝‍🧑 User authentication (Laravel UI)
+- 🗂️ Category-based post browsing
+- 💬 Comment system
+- 🖼️ Optional image uploads
 
-- 📝 Create, edit, and delete posts  
-- 🧑‍🤝‍🧑 User registration and login (authentication)  
-- 🔍 Category-based and keyword search for posts  
-- 📌 Pin important announcements to the top  
-- 💬 Comment and reply system  
-- 🖼️ Optional image uploads for posts
+> Some features such as pinning posts and keyword search are under development.
 
 ---
 
 ## 🚀 Setup Guide
+1. Clone the repository  
+2. Copy `.env.example` to `.env` and generate app key  
+3. Configure database (MySQL or SQLite)  
+4. Run migrations and seeders  
+5. Install frontend dependencies and build assets  
+6. Start local development server  
 
-1. Clone this repository
+> See `/docs/Setup.md` for detailed instructions.
 
-2. Create a `.env` file and generate application key
-
-3. Install necessary packages via Composer and npm
-
-4. Create a database and run migrations
-
-5. Start the local development server
 
 ---
 
@@ -60,3 +60,11 @@ Branching strategy and naming conventions will be documented in `/docs/CONTRIBUT
 
 MIT License  
 This project is open source and free to use.
+
+
+---
+
+## 🛠️ Development Status
+This project is under active development.
+Some features are currently UI-only or planned for future releases.
+
