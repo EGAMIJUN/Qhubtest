@@ -25,7 +25,8 @@ jobs:
       - name: Update vulnerable packages
         run: |
           composer update \
-            laravel/framework 'symfony/*' 'league/*' 'guzzlehttp/*' \
+            laravel/framework laravel/socialite laravel/sanctum 'workos/*' \
+            'symfony/*' 'league/*' 'guzzlehttp/*' \
             phpseclib/phpseclib phpunit/phpunit psy/psysh firebase/php-jwt \
             --with-all-dependencies --no-interaction --no-scripts --no-progress
       - name: Audit after update
